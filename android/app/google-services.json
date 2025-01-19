@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "372441357497",
+    "project_id": "bhi-workbase",
+    "storage_bucket": "bhi-workbase.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:372441357497:android:1775e6e0e55d718a330f68",
+        "android_client_info": {
+          "package_name": "com.example.bhi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDWZU67vluL1wqrtcn84Q94u1ZEUcpKovY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
