@@ -1,5 +1,12 @@
 import 'package:bhi/constant/pallete.dart';
+import 'package:bhi/pages/auth/login_screen.dart';
 import 'package:bhi/pages/dubmy.dart';
+import 'package:bhi/pages/home/profile/account_settings.dart';
+import 'package:bhi/pages/home/profile/language_theme.dart';
+import 'package:bhi/pages/home/profile/notification.dart';
+import 'package:bhi/pages/home/profile/privacy.dart';
+import 'package:bhi/pages/home/profile/theme_prefernce.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -10,6 +17,31 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  final _auth = FirebaseAuth.instance;
+
+  // Logout Function
+  void logout() async {
+    try {
+      await _auth.signOut();
+      // After successful logout, navigate to the LoginScreen or any other screen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                const LoginScreen()), // Assuming LoginScreen is your login page
+      );
+      // Show a toast or snackbar message if needed
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Logged out successfully')),
+      );
+    } catch (error) {
+      // Handle any errors
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error logging out: $error')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -82,7 +114,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => DubmyPage(),
+                              builder: (context) => AccountSettingsPage(),
                             ),
                           );
                         },
@@ -95,7 +127,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => DubmyPage(),
+                              builder: (context) => NotificationsPage(),
                             ),
                           );
                         },
@@ -108,7 +140,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => DubmyPage(),
+                              builder: (context) => PrivacyPage(),
                             ),
                           );
                         },
@@ -137,7 +169,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => DubmyPage(),
+                              builder: (context) => ThemePreferencesPage(),
                             ),
                           );
                         },
@@ -150,7 +182,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => DubmyPage(),
+                              builder: (context) => ComingSoonPage(),
                             ),
                           );
                         },
@@ -173,7 +205,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     horizontal: 24,
                   ),
                 ),
-                onPressed: () {},
+                onPressed: logout, // Calling logout function
                 icon: const Icon(
                   Icons.logout,
                   color: Colors.white,

@@ -1,3 +1,4 @@
+import 'package:bhi/constant/pallete.dart';
 import 'package:bhi/pages/home/checkoutpage.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -42,9 +43,9 @@ class _CartPageState extends State<CartPage> {
       appBar: AppBar(
         title: const Text(
           'Cart',
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
         ),
-        backgroundColor: Colors.teal,
       ),
       body: cartItems.isEmpty
           ? const Center(

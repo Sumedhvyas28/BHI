@@ -4,6 +4,7 @@ import 'package:bhi/constant/pallete.dart';
 import 'package:bhi/model/book.dart';
 import 'package:bhi/pages/home/bottom_drawer.dart';
 import 'package:bhi/pages/home/cart.dart';
+import 'package:bhi/pages/home/description.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -446,7 +447,16 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                       backgroundColor: Pallete.mainDashColor,
                                     ),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      // Navigate to the Description Page
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const DescriptionPage(),
+                                        ),
+                                      );
+                                    },
                                     child: Text(
                                       'Read More',
                                       style: TextStyle(color: Colors.white),
