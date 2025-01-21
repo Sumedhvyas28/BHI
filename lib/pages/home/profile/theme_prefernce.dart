@@ -7,8 +7,6 @@ class ThemePreferencesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeNotifier = Provider.of<ThemeNotifier>(context);
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -39,33 +37,12 @@ class ThemePreferencesPage extends StatelessWidget {
             const SizedBox(height: 16),
             ListTile(
               title: const Text("Light Theme"),
-              trailing: Radio<ThemeMode>(
-                value: ThemeMode.light,
-                groupValue: themeNotifier.themeMode,
-                onChanged: (value) {
-                  themeNotifier.setTheme(value!);
-                },
-              ),
             ),
             ListTile(
               title: const Text("Dark Theme"),
-              trailing: Radio<ThemeMode>(
-                value: ThemeMode.dark,
-                groupValue: themeNotifier.themeMode,
-                onChanged: (value) {
-                  themeNotifier.setTheme(value!);
-                },
-              ),
             ),
             ListTile(
               title: const Text("System Default"),
-              trailing: Radio<ThemeMode>(
-                value: ThemeMode.system,
-                groupValue: themeNotifier.themeMode,
-                onChanged: (value) {
-                  themeNotifier.setTheme(value!);
-                },
-              ),
             ),
           ],
         ),

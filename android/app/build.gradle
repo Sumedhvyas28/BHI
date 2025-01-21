@@ -45,3 +45,9 @@ android {
 flutter {
     source = "../.."
 }
+
+dependencies {
+    implementation 'com.google.android.gms:play-services-basement:18.2.0' // Core library
+    implementation 'com.google.android.gms:play-services-auth:20.7.0' // Authentication services
+    implementation 'com.google.android.gms:play-services-base:18.2.0' // Base library
+}

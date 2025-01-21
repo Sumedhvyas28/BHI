@@ -26,6 +26,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
     final totalAmount = calculateTotal();
+    double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       appBar: AppBar(
@@ -77,10 +78,24 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     leading: ClipRRect(
                       borderRadius: BorderRadius.circular(8.0),
                       child: Image.asset(
-                        item['image'],
+                        item['image'] ??
+                            '', // Use an empty string as fallback for image
                         fit: BoxFit.cover,
-                        width: 50,
-                        height: 50,
+                        width: screenWidth *
+                            0.15, // Adjust width based on screen size
+                        height: screenWidth *
+                            0.15, // Adjust height based on screen size
+                        errorBuilder: (context, error, stackTrace) {
+                          // Fallback to an Icon when image is broken or unavailable
+                          return Icon(
+                            Icons
+                                .image, // Icon representing an image (use any icon you prefer)
+                            size: screenWidth *
+                                0.15, // Icon size proportional to the image size
+                            color:
+                                Colors.grey, // Icon color for better visibility
+                          );
+                        },
                       ),
                     ),
                     title: Text(
