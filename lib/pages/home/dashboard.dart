@@ -3,7 +3,7 @@ import 'package:bhi/pages/auth/login_screen.dart';
 import 'package:bhi/pages/home/homeview.dart';
 import 'package:bhi/pages/home/library.dart';
 import 'package:bhi/pages/home/profile.dart';
-import 'package:bhi/pages/home/search.dart';
+import 'package:bhi/pages/home/analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _screens = [
     const HomePage(), // Replace with actual content
     const LibraryPage(),
-    const SearchPage(),
+    const OrderAnalyticsPage(),
     const ProfilePage(),
   ];
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -54,8 +54,8 @@ class _HomeScreenState extends State<HomeScreen> {
             label: 'Library',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Search',
+            icon: Icon(Icons.analytics),
+            label: 'Analytics',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),

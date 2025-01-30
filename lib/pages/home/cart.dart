@@ -66,24 +66,62 @@ class _CartPageState extends State<CartPage> {
       try {
         // Read the CSV file content
         String fileContent = await file.readAsString();
+        print("Raw CSV Content:\n$fileContent");
+
         List<List<dynamic>> csvTable =
             CsvToListConverter().convert(fileContent);
+        print("Parsed CSV Table: $csvTable");
 
-        // Convert CSV rows to maps and upload to Firestore
-        for (var row in csvTable.skip(1)) {
-          // Skip the header row
-          await FirebaseFirestore.instance.collection('BOOKS').add({
-            'ISBN': row[0].toString(),
-            'category': row[1].toString(),
-            'quantity': row[2],
-          });
+        if (csvTable.isNotEmpty) {
+          // Ensure the first meaningful row is actually the header
+          int headerRowIndex = csvTable.indexWhere((row) =>
+              row.isNotEmpty &&
+              row.any((cell) => cell.toString().trim().isNotEmpty));
+
+          if (headerRowIndex == -1) {
+            print("No valid header row found.");
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("CSV format is incorrect.")),
+            );
+            return;
+          }
+
+          List<dynamic> headers = csvTable[headerRowIndex];
+          print("Headers: $headers");
+
+          // Process data rows
+          for (var i = headerRowIndex + 1; i < csvTable.length; i++) {
+            var row = csvTable[i];
+
+            // Ensure row has enough columns
+            if (row.length < 3) {
+              print("Skipping invalid row: $row");
+              continue;
+            }
+
+            print("Processing Row: $row");
+
+            await FirebaseFirestore.instance.collection('BOOKS').add({
+              'ISBN': row[2].toString(), // Assuming ISBN is in column index 2
+              'category': row[8].toString(), // Assuming Genre is in index 8
+              'title': row[3].toString(), // Title in index 3
+              'author': row[4].toString(), // Author in index 4
+              'quantity': int.tryParse(row[10].toString()) ??
+                  0, // Convert Pages to quantity
+            });
+          }
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+                content: Text("File uploaded and added to Firestore!")),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("CSV file is empty.")),
+          );
         }
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text("File uploaded and added to Firestore!")),
-        );
       } catch (e) {
+        print("Error parsing CSV: $e");
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Error uploading file: $e")),
         );
@@ -124,7 +162,7 @@ class _CartPageState extends State<CartPage> {
             children: [
               ElevatedButton(
                 onPressed: exportData,
-                child: const Text('Export CSV'),
+                child: const Text('Import CSV'),
               ),
             ],
           ),
@@ -181,14 +219,14 @@ class _CartPageState extends State<CartPage> {
                                     height: screenWidth *
                                         0.15, // Adjust height based on screen size
                                     errorBuilder: (context, error, stackTrace) {
-                                      // Fallback to an Icon when image is broken or unavailable
-                                      return Icon(
-                                        Icons
-                                            .image, // Icon representing an image (use any icon you prefer)
-                                        size: screenWidth *
-                                            0.15, // Icon size proportional to the image size
-                                        color: Colors
-                                            .grey, // Icon color for better visibility
+                                      // Fallback to your custom image when image is broken or unavailable
+                                      return Image.asset(
+                                        'assets/home/flowery-book-separator.jpg', // Your custom fallback image
+                                        fit: BoxFit.cover,
+                                        width: screenWidth *
+                                            0.15, // Same size as the original image
+                                        height: screenWidth *
+                                            0.15, // Same size as the original image
                                       );
                                     },
                                   ),

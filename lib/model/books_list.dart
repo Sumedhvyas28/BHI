@@ -5,7 +5,7 @@ final List<Map<String, dynamic>> gridItems = [
     'image': 'assets/home/har1.jpg',
     'title': 'Harry Porter And the goblet of fire',
     'Author': 'Jk Rollins',
-    'Category': 'Drama / Thriller',
+    'Category': 'Fiction',
     'mainDescription':
         "An orphaned boy enrolls in a school of wizardry, where he learns the truth about himself, his family and the terrible evil that haunts the magical world.",
     'rating': 4.0,

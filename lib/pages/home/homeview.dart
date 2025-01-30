@@ -254,7 +254,7 @@ class _HomePageState extends State<HomePage> {
                                           MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          "Online Learning",
+                                          "Upcoming",
                                           style: TextStyle(
                                             color: Colors.white,
                                             fontSize: screenWidth * 0.05,
@@ -286,10 +286,20 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                                 Expanded(
-                                  child: Lottie.asset(
-                                    "assets/onboarding/4.json",
-                                    fit: BoxFit.cover,
-                                  ),
+                                  child: index == 0
+                                      ? Image.asset(
+                                          "assets/home/hkashyap.jpg", // Photo for first page
+                                          fit: BoxFit.cover,
+                                        )
+                                      : index == 1
+                                          ? Image.asset(
+                                              "assets/home/fence.jpg", // Photo for first page
+                                              fit: BoxFit.cover,
+                                            )
+                                          : Image.asset(
+                                              "assets/home/unlocked.jpg", // Photo for first page
+                                              fit: BoxFit.cover,
+                                            ),
                                 ),
                               ],
                             ),
@@ -298,9 +308,10 @@ class _HomePageState extends State<HomePage> {
                       },
                     ),
                   ),
+
                   SizedBox(height: screenHeight * 0.02),
 
-                  // Page Indicator
+// Page Indicator
                   Center(
                     child: SmoothPageIndicator(
                       controller: _pageController,
@@ -313,6 +324,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
+
                   SizedBox(height: screenHeight * 0.03),
 
                   // Section Title
@@ -354,8 +366,11 @@ class _HomePageState extends State<HomePage> {
                                 ),
                                 SizedBox(height: screenHeight * 0.01),
                                 Text(
-                                  book['title'],
-                                  maxLines: null,
+                                  (book['title']?.split(' ').first ??
+                                      'Unknown Title'),
+                                  maxLines: 1, // Ensures it shows only one line
+                                  overflow: TextOverflow
+                                      .ellipsis, // Adds "..." if the text overflows
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: screenWidth * 0.035,
@@ -400,52 +415,89 @@ class _HomePageState extends State<HomePage> {
                   ),
                   SizedBox(height: screenHeight * 0.01),
                   Card(
-                    color: Colors.white54,
+                    // color: Colors.white54,
                     elevation: 3,
                     child: Padding(
                       padding: const EdgeInsets.all(14),
                       child: Container(
                         width: double.infinity,
-                        height: screenHeight * 0.2,
+                        // Adjust height to be more flexible
+                        height: screenHeight * 0.35,
                         child: Row(
                           children: [
+                            // Image container with some padding for better spacing
                             Container(
                               color: Colors.white24,
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: Image.asset('assets/home/gojo.jpg'),
+                                child: Image.asset(
+                                  'assets/home/yama.jpg', // Updated image asset
+                                  width:
+                                      screenWidth * 0.3, // Flexible image width
+                                  height: screenHeight *
+                                      0.25, // Flexible image height
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
-                            SizedBox(width: screenWidth * 0.03),
+                            SizedBox(
+                                width: screenWidth *
+                                    0.05), // Spacing between image and text
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  // Title with adaptive font size
                                   Text(
-                                    'Jujutsu Kaisen',
+                                    'Yama Kindle Edition',
                                     style: TextStyle(
                                       color: Colors.black,
-                                      fontSize: 20,
+                                      fontSize: screenWidth > 600
+                                          ? 22
+                                          : 18, // Responsive font size
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                   SizedBox(height: screenHeight * 0.01),
+                                  // Author and format text with adaptive font size
                                   Text(
-                                    'Extracurricular reading / Fiction / Drama',
-                                    maxLines: 2,
+                                    'by Kevin Missal (Author)\nFormat: Kindle Edition',
                                     style: TextStyle(
                                       color: Colors.grey,
-                                      fontSize: 14,
+                                      fontSize: screenWidth > 600 ? 16 : 14,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                   SizedBox(height: screenHeight * 0.01),
+                                  // Rating text with adaptive font size
+                                  Text(
+                                    '4.2 out of 5 stars    206 ratings',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: screenWidth > 600 ? 16 : 14,
+                                    ),
+                                  ),
+                                  SizedBox(height: screenHeight * 0.01),
+                                  // Description text with ellipsis for overflow
+                                  Text(
+                                    'Dhruvi Rajput is a psychotherapist who has...',
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color: Colors.black87,
+                                      fontSize: screenWidth > 600 ? 16 : 14,
+                                    ),
+                                  ),
+                                  SizedBox(height: screenHeight * 0.02),
+                                  // Read More button with better padding and border radius
                                   ElevatedButton(
                                     style: ElevatedButton.styleFrom(
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                       backgroundColor: Pallete.mainDashColor,
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 10, horizontal: 20),
                                     ),
                                     onPressed: () {
                                       // Navigate to the Description Page
@@ -459,9 +511,11 @@ class _HomePageState extends State<HomePage> {
                                     },
                                     child: Text(
                                       'Read More',
-                                      style: TextStyle(color: Colors.white),
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 16),
                                     ),
                                   ),
+                                  SizedBox(height: screenHeight * 0.02),
                                 ],
                               ),
                             ),
@@ -469,7 +523,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
-                  ),
+                  )
                 ],
               ),
             ),

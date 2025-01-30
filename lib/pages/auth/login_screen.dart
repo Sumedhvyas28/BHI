@@ -2,7 +2,10 @@ import 'package:bhi/component/round_button.dart';
 import 'package:bhi/component/utils.dart';
 import 'package:bhi/constant/pallete.dart';
 import 'package:bhi/pages/home/dashboard.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart'; // For Realtime Database
+// import 'package:cloud_firestore/cloud_firestore.dart'; // For Firestore
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -21,6 +24,9 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController passwordController = TextEditingController();
 
   final _auth = FirebaseAuth.instance;
+  // final _database = FirebaseDatabase.instance.reference(); // For Realtime Database
+  final _firestore = FirebaseFirestore.instance; // Uncomment for Firestore
+
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -30,6 +36,28 @@ class _LoginScreenState extends State<LoginScreen> {
     passwordController.dispose();
   }
 
+  // Save user data in the Firebase Realtime Database
+  Future<void> storeUserData(User user) async {
+    // final userRef = _database.child("users").child(user.uid); // Realtime Database
+    // Uncomment below for Firestore
+    final userRef = _firestore.collection('users').doc(user.uid);
+
+    try {
+      await userRef.set({
+        'uid': user.uid,
+        'email': user.email,
+        'createdAt': DateTime.now().toIso8601String(),
+        'lastLogin': DateTime.now().toIso8601String(),
+        'role': 'user', // Add custom roles if needed
+      });
+      debugPrint('User data saved successfully.');
+    } catch (e) {
+      debugPrint('Error saving user data: $e');
+      utils().toastMessage('Error saving user data: $e');
+    }
+  }
+
+  // Login method
   void login() {
     if (emailController.text.isEmpty || passwordController.text.isEmpty) {
       utils().toastMessage('Email or Password cannot be empty');
@@ -42,23 +70,31 @@ class _LoginScreenState extends State<LoginScreen> {
 
     _auth
         .signInWithEmailAndPassword(
-            email: emailController.text,
-            password: passwordController.text.toString())
-        .then((value) {
-      utils().toastMessage(value.user!.email.toString());
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => HomeScreen()));
+      email: emailController.text,
+      password: passwordController.text.trim(),
+    )
+        .then((value) async {
+      final user = value.user!;
+      utils().toastMessage('Welcome, ${user.email}');
+
+      // Save user data in the database
+      await storeUserData(user);
+
+      // Navigate to Home Screen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomeScreen()),
+      );
+
       setState(() {
         loading = false;
       });
-    }).onError((error, StackTrace) {
+    }).onError((error, StackTrace stackTrace) {
       setState(() {
         loading = false;
       });
       utils().toastMessage(error.toString());
-
       debugPrint(error.toString());
-      print('error');
     });
   }
 
@@ -135,7 +171,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             const Spacer(),
-            _buildGreyText('Enter your Email'),
+            _buildGreyText('Enter your Email', emailController),
             SizedBox(height: mediaSize.height * 0.02),
             _buildPasswordTextField('Enter your Password'),
             SizedBox(height: mediaSize.height * 0.02),
@@ -171,9 +207,9 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildGreyText(String text) {
+  Widget _buildGreyText(String text, TextEditingController controller) {
     return TextFormField(
-      controller: emailController,
+      controller: controller,
       decoration: InputDecoration(
         hintText: text,
         border: OutlineInputBorder(

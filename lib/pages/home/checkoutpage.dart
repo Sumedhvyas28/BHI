@@ -1,3 +1,5 @@
+import 'package:bhi/constant/pallete.dart';
+import 'package:bhi/pages/home/order_Screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
@@ -13,6 +15,23 @@ class CheckoutPage extends StatefulWidget {
 
 class _CheckoutPageState extends State<CheckoutPage> {
   Razorpay razorpay = Razorpay();
+  List<TextEditingController> quantityControllers = [];
+
+  @override
+  void initState() {
+    super.initState();
+    razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+
+    // Initialize controllers for each cart item
+    quantityControllers = List.generate(
+      widget.cartItems.length,
+      (index) => TextEditingController(
+        text: widget.cartItems[index]['quantity'].toString(),
+      ),
+    );
+  }
+
   double calculateTotal() {
     double total = 0.0;
     for (var item in widget.cartItems) {
@@ -23,9 +42,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
   @override
   Widget build(BuildContext context) {
-    razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
-    razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
-    final totalAmount = calculateTotal();
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
@@ -34,7 +50,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
           'Checkout',
           style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.teal,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -86,14 +101,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         height: screenWidth *
                             0.15, // Adjust height based on screen size
                         errorBuilder: (context, error, stackTrace) {
-                          // Fallback to an Icon when image is broken or unavailable
-                          return Icon(
-                            Icons
-                                .image, // Icon representing an image (use any icon you prefer)
-                            size: screenWidth *
-                                0.15, // Icon size proportional to the image size
-                            color:
-                                Colors.grey, // Icon color for better visibility
+                          // Fallback to your custom image when image is broken or unavailable
+                          return Image.asset(
+                            'assets/home/flowery-book-separator.jpg', // Your custom fallback image
+                            fit: BoxFit.cover,
+                            width: screenWidth *
+                                0.15, // Same size as the original image
+                            height: screenWidth *
+                                0.15, // Same size as the original image
                           );
                         },
                       ),
@@ -105,9 +120,33 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    subtitle: Text(
-                      'Qty: ${item['quantity']} ' ?? "NAME",
-                      style: const TextStyle(color: Colors.grey),
+                    subtitle: Row(
+                      children: [
+                        const Text(
+                          "Qty: ",
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                        SizedBox(
+                          width: 50,
+                          child: TextField(
+                            controller: quantityControllers[index],
+                            keyboardType: TextInputType.number,
+                            textAlign: TextAlign.center,
+                            decoration: const InputDecoration(
+                              contentPadding: EdgeInsets.symmetric(vertical: 5),
+                              isDense: true,
+                            ),
+                            onChanged: (value) {
+                              setState(() {
+                                int newQuantity = int.tryParse(value) ?? 1;
+                                if (newQuantity < 1) newQuantity = 1;
+                                widget.cartItems[index]['quantity'] =
+                                    newQuantity;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                     trailing: Text(
                       '\$${((item['price'] ?? 0) * (item['quantity'] ?? 1)).toStringAsFixed(2)}',
@@ -132,23 +171,23 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   ),
                 ),
                 Text(
-                  '\$${totalAmount.toStringAsFixed(2)}',
+                  '\$${calculateTotal().toStringAsFixed(2)}',
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.teal,
+                    color: Pallete.mainDashColor,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
                   var options = {
                     'key': 'rzp_test_GcZZFDPP0jHtC4',
-                    'amount': (totalAmount * 100).toInt(),
+                    'amount': '10',
                     'name': 'Bhi.',
                     'description': 'Books',
                     'prefill': {
@@ -161,9 +200,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   // ScaffoldMessenger.of(context).showSnackBar(
                   //   const SnackBar(content: Text('Order placed successfully!')),
                   // );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => LiveOrderStatusPage()),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.teal,
+                  backgroundColor: Pallete.mainDashColor,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),

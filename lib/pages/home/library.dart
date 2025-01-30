@@ -1,5 +1,6 @@
-import 'package:bhi/model/books_list.dart'; // Assuming gridItems is imported from books_list.dart
 import 'package:bhi/pages/home/cart.dart';
+import 'package:bhi/pages/home/checkoutpage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class LibraryPage extends StatefulWidget {
@@ -17,6 +18,40 @@ class _LibraryPageState extends State<LibraryPage> {
   // Cart state
   List<Map<String, dynamic>> cartItems = [];
 
+  // List to store books from Firestore
+  List<Map<String, dynamic>> bookList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchBooks(); // Fetch books when the page loads
+  }
+
+  Future<void> fetchBooks() async {
+    try {
+      QuerySnapshot snapshot =
+          await FirebaseFirestore.instance.collection('BOOKS').get();
+
+      List<Map<String, dynamic>> books = snapshot.docs.map((doc) {
+        var data = doc.data() as Map<String, dynamic>;
+
+        return {
+          'id': doc.id,
+          'title': data['title'] ?? 'Unknown Title',
+          'author': data['author'] ?? 'Unknown Author',
+          'category': data['category'] ?? 'Uncategorized',
+          'image': data['image'] ?? '', // Default empty string if image is null
+        };
+      }).toList();
+
+      setState(() {
+        bookList = books;
+      });
+    } catch (e) {
+      print("Error fetching books: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -25,14 +60,14 @@ class _LibraryPageState extends State<LibraryPage> {
     // List of unique categories with "All" as the default option
     final List<String> categories = [
       'All',
-      ...gridItems.map((item) => item['Category'] as String).toSet().toList(),
+      ...bookList.map((item) => item['category'] as String).toSet().toList(),
     ];
 
     // Filtered list based on the search query and selected category
-    final filteredItems = gridItems.where((item) {
+    final filteredItems = bookList.where((item) {
       final title = item['title'].toString().toLowerCase();
-      final author = item['Author'].toString().toLowerCase();
-      final category = item['Category'].toString();
+      final author = item['author'].toString().toLowerCase();
+      final category = item['category'].toString();
       final matchesSearch =
           title.contains(_searchQuery) || author.contains(_searchQuery);
       final matchesCategory =
@@ -134,73 +169,89 @@ class _LibraryPageState extends State<LibraryPage> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(20),
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 30,
-                  mainAxisSpacing: 40,
-                  childAspectRatio: 0.7,
-                ),
-                itemCount: filteredItems.length,
-                itemBuilder: (context, index) {
-                  return InkWell(
-                    onTap: () {
-                      // Navigate to the CartPage with the selected book
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CartPage(
-                            cartItems: [
-                              filteredItems[index]
-                            ], // Pass the selected book
-                          ),
-                        ),
-                      );
-                    },
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: ConstrainedBox(
-                              constraints: BoxConstraints(
-                                maxHeight: screenHeight * 0.25,
-                                maxWidth: screenWidth,
+              child: filteredItems.isEmpty
+                  ? const Center(child: Text("No books available"))
+                  : GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 30,
+                        mainAxisSpacing: 40,
+                        childAspectRatio: 0.7,
+                      ),
+                      itemCount: filteredItems.length,
+                      itemBuilder: (context, index) {
+                        return InkWell(
+                          onTap: () {
+                            // Navigate to the CartPage with the selected book
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CheckoutPage(
+                                  cartItems: [
+                                    filteredItems[index]
+                                  ], // Pass the selected book
+                                ),
                               ),
-                              child: Image.asset(
-                                filteredItems[index]['image'],
-                                fit: BoxFit.cover,
+                            );
+                          },
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: ConstrainedBox(
+                                    constraints: BoxConstraints(
+                                      maxHeight: screenHeight * 0.25,
+                                      maxWidth: screenWidth,
+                                    ),
+                                    child: filteredItems[index]['image'] !=
+                                                null &&
+                                            filteredItems[index]['image']
+                                                .isNotEmpty
+                                        ? Image.network(
+                                            filteredItems[index]['image'],
+                                            fit: BoxFit.cover,
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                              return Image.asset(
+                                                  'assets/home/flowery-book-separator.jpg',
+                                                  fit: BoxFit.cover);
+                                            },
+                                          )
+                                        : Image.asset(
+                                            'assets/home/flowery-book-separator.jpg',
+                                            fit: BoxFit.cover),
+                                  ),
+                                ),
                               ),
-                            ),
+                              const SizedBox(height: 8),
+                              Text(
+                                filteredItems[index]['title'],
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                filteredItems[index]['author'],
+                                style: const TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
                           ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          filteredItems[index]['title'],
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          filteredItems[index]['Author'],
-                          style: const TextStyle(
-                            color: Colors.grey,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
             ),
           ),
         ],
