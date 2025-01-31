@@ -1,5 +1,6 @@
 import 'package:bhi/constant/pallete.dart';
 import 'package:flutter/material.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 class OrderAnalyticsPage extends StatefulWidget {
   const OrderAnalyticsPage({super.key});
@@ -16,15 +17,8 @@ class _OrderAnalyticsPageState extends State<OrderAnalyticsPage> {
       'Title': 'Ballad of A Bullfrog',
       'Author': 'Vibha Divekar',
       'DOP': '2024-10-20',
-      'Amazon Link': '',
-      'Language': 'English',
       'Genre': "Children's Book",
-      'Binding': 'Pin',
-      'Pages': 20,
-      'MRP': 500,
       'Quantity': 3,
-      'Description': "Join the Bullfrog as he sings his ballad...",
-      'About Author': "A passionate children's book author...",
     },
     {
       'Publisher': "Author's Ink",
@@ -32,15 +26,8 @@ class _OrderAnalyticsPageState extends State<OrderAnalyticsPage> {
       'Title': 'Papa 2',
       'Author': 'Jiganshu Sharma',
       'DOP': '2024-10-15',
-      'Amazon Link': '',
-      'Language': 'English',
       'Genre': 'Fiction',
-      'Binding': 'Paperback',
-      'Pages': 200,
-      'MRP': 250,
       'Quantity': 2,
-      'Description': "Once again, the demonic murder mystery...",
-      'About Author': "Jiganshu Sharma is a bestselling novelist...",
     },
     {
       'Publisher': "Author's Ink",
@@ -48,20 +35,38 @@ class _OrderAnalyticsPageState extends State<OrderAnalyticsPage> {
       'Title': 'Heroic Deceit',
       'Author': 'Salim Hansa',
       'DOP': '2024-10-15',
-      'Amazon Link': '',
-      'Language': 'English',
       'Genre': 'Fiction',
-      'Binding': 'Paperback',
-      'Pages': 194,
-      'MRP': 350,
       'Quantity': 5,
-      'Description': "Ali, a disillusioned corporate employee...",
-      'About Author': "Salim Hansa is an Indian author known for...",
     }
   ];
 
+  int get totalOrderQuantity =>
+      orders.fold(0, (sum, order) => sum + (order['Quantity'] as int));
+
+  int get totalOrders => orders.length;
+
+  Map<String, List<String>> getOrdersByDate() {
+    Map<String, List<String>> dateOrders = {};
+    for (var order in orders) {
+      dateOrders.putIfAbsent(order['DOP'], () => []).add(order['Title']);
+    }
+    return dateOrders;
+  }
+
+  Map<String, int> getGenreDistribution() {
+    Map<String, int> genreMap = {};
+    for (var order in orders) {
+      genreMap[order['Genre']] =
+          (genreMap[order['Genre']] ?? 0) + order['Quantity'] as int;
+    }
+    return genreMap;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final genreData = getGenreDistribution();
+    final orderDates = getOrdersByDate();
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -76,12 +81,104 @@ class _OrderAnalyticsPageState extends State<OrderAnalyticsPage> {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView.builder(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Summary Metrics (Top Section)
+              Card(
+                elevation: 5,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildSummaryTile(
+                          "Total Order Quantity", totalOrderQuantity),
+                      _buildSummaryTile("Number of Orders", totalOrders),
+
+                      // Order Date Section
+                      const SizedBox(height: 10),
+                      const Text(
+                        "Order Dates & Books",
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: orderDates.entries.map((entry) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4.0),
+                            child: Text(
+                              "${entry.key}: ${entry.value.join(', ')}",
+                              style: const TextStyle(fontSize: 14),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+
+                      // Genre-Specific Section
+                      const SizedBox(height: 10),
+                      const Text(
+                        "Genre-Specific Books",
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                      _buildSummaryTile("Unique Genres", genreData.length),
+
+                      // Show list of genres & their quantities
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: genreData.entries.map((entry) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 2.0),
+                            child: Text(
+                              "${entry.key}: ${entry.value} books",
+                              style: const TextStyle(fontSize: 14),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              // Pie Chart for Genre-Specific Distribution
+              const Text(
+                "Genre-Specific Distribution",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(
+                height: 200,
+                child: PieChart(
+                  PieChartData(
+                    sections: genreData.entries
+                        .map((e) => PieChartSectionData(
+                              title: "${e.key}\n(${e.value})",
+                              value: e.value.toDouble(),
+                              color: _getGenreColor(e.key),
+                              radius: 50,
+                            ))
+                        .toList(),
+                    borderData: FlBorderData(show: false),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              // Order List
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: orders.length,
                 itemBuilder: (context, index) {
                   final order = orders[index];
@@ -110,14 +207,6 @@ class _OrderAnalyticsPageState extends State<OrderAnalyticsPage> {
                                 "Author: ${order['Author']}\nGenre: ${order['Genre']}",
                                 style: const TextStyle(fontSize: 14)),
                           ),
-                          Text("Publisher: ${order['Publisher']}"),
-                          Text("ISBN: ${order['ISBN']}"),
-                          Text("Binding: ${order['Binding']}"),
-                          Text("Pages: ${order['Pages']}"),
-                          Text("MRP: ${order['MRP']}"),
-                          Text("Language: ${order['Language']}"),
-                          Text("Description: ${order['Description']}"),
-                          Text("About Author: ${order['About Author']}"),
                           Text("Ordered Quantity: ${order['Quantity']}",
                               style:
                                   const TextStyle(fontWeight: FontWeight.bold)),
@@ -127,14 +216,38 @@ class _OrderAnalyticsPageState extends State<OrderAnalyticsPage> {
                   );
                 },
               ),
-            ),
-            const SizedBox(height: 20),
-            const Text("Order Analytics",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 10),
-          ],
+
+              const SizedBox(height: 20), // Adds space before bottom elements
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  Widget _buildSummaryTile(String title, dynamic value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(title,
+              style:
+                  const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          Text(value.toString(), style: const TextStyle(fontSize: 16)),
+        ],
+      ),
+    );
+  }
+
+  Color _getGenreColor(String genre) {
+    final colors = [
+      Colors.red,
+      Colors.blue,
+      Colors.green,
+      Colors.orange,
+      Colors.purple
+    ];
+    return colors[genre.hashCode % colors.length];
   }
 }

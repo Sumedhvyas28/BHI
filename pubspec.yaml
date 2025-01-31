@@ -53,7 +53,7 @@ dependencies:
   path_provider: ^2.1.5
   file_picker: ^8.1.7
   timelines: ^0.1.0
-  fl_chart: ^0.70.2
+  fl_chart: 0.63.0  # Use an older, stable version
 
 dev_dependencies:
   flutter_test:

@@ -42,9 +42,19 @@ class _CartPageState extends State<CartPage> {
     try {
       final QuerySnapshot snapshot =
           await FirebaseFirestore.instance.collection('BOOKS').get();
-      final data = snapshot.docs
-          .map((doc) => doc.data() as Map<String, dynamic>)
-          .toList();
+      final data = snapshot.docs.map((doc) {
+        var bookData = doc.data() as Map<String, dynamic>;
+        return {
+          'id': doc.id,
+          'title': bookData['title'] ?? 'Unknown Title',
+          'author': bookData['author'] ?? 'Unknown Author',
+          'ISBN': bookData['ISBN'] ?? 'N/A',
+          'category': bookData['category'] ?? 'Uncategorized',
+          'quantity': bookData['quantity'] ?? 0,
+          'image': bookData['image'] ?? '', // Fetch image from Firestore
+        };
+      }).toList();
+
       print(data); // Debug: Print fetched data
       setState(() {
         firestoreData = data;
@@ -210,26 +220,29 @@ class _CartPageState extends State<CartPage> {
                               children: [
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(8.0),
-                                  child: Image.asset(
-                                    item['image'] ??
-                                        '', // Use an empty string as fallback for image
-                                    fit: BoxFit.cover,
-                                    width: screenWidth *
-                                        0.15, // Adjust width based on screen size
-                                    height: screenWidth *
-                                        0.15, // Adjust height based on screen size
-                                    errorBuilder: (context, error, stackTrace) {
-                                      // Fallback to your custom image when image is broken or unavailable
-                                      return Image.asset(
-                                        'assets/home/flowery-book-separator.jpg', // Your custom fallback image
-                                        fit: BoxFit.cover,
-                                        width: screenWidth *
-                                            0.15, // Same size as the original image
-                                        height: screenWidth *
-                                            0.15, // Same size as the original image
-                                      );
-                                    },
-                                  ),
+                                  child: item['image'] != null &&
+                                          item['image'].isNotEmpty
+                                      ? Image.network(
+                                          item['image'],
+                                          fit: BoxFit.cover,
+                                          width: screenWidth * 0.15,
+                                          height: screenWidth * 0.15,
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                            return Image.asset(
+                                              'assets/home/flowery-book-separator.jpg',
+                                              fit: BoxFit.cover,
+                                              width: screenWidth * 0.15,
+                                              height: screenWidth * 0.15,
+                                            );
+                                          },
+                                        )
+                                      : Image.asset(
+                                          'assets/home/flowery-book-separator.jpg',
+                                          fit: BoxFit.cover,
+                                          width: screenWidth * 0.15,
+                                          height: screenWidth * 0.15,
+                                        ),
                                 ),
                                 const SizedBox(width: 16),
                                 Expanded(
