@@ -22,55 +22,40 @@ final List<Map<String, dynamic>> books = [
     },
   },
   {
-    'title': 'Prahlad (Book Three in the Narasimha Trilogy)',
-    'author': 'Kevin Missal',
-    'image': 'assets/home/prahlad.jpg',
+    'title': 'The Power of Your Subconscious mind',
+    'author': 'Joseph Murphy',
+    'image': 'assets/home/power.jpg',
     'mainDescription':
-        "Kevin Missal is a twenty-two year old graduate of St. Stephen’s College. He has previously released the first book of the Kalki Trilogy, Dharmayoddha Kalki: Avatar of Vishnu, which became a National best-seller and received praise from newspapers such as Millennium Post and Sunday Guardian, who termed it as '2017’s mythological phenomenon'. Kevin loves reading, watching films, and building stories in his mind. He lives in New Delhi.",
+        "Dr. Murphy changed the lives of people all over the world. His legacy is being carried forward by the JMWGroupforlife.com and Dr-Joseph-Murphy.com.",
     'rating': 4.5,
-    'genre': 'Fantasy, Mythology',
-    'publicationYear': '2023',
-    'pageCount': 253,
-    'publisher': 'HarperCollins India (30 January 2023)',
-    'ISBN': 'B07SFVJNM4',
-    'itemWeight': '1355 KB',
+    'genre': ' Self help , Literary Theory, History & Criticism',
+    'publicationYear': '2022',
+    'pageCount': 224,
+    'publisher':
+        'Arushi book enterprises (1 January 2022); 9323509785, arushibookenterprises@gmail.com',
+    'ISBN': '9391626378',
+    'itemWeight': '172 g',
     'dimensions': 'N/A',
     'countryOfOrigin': 'India',
     'bestSellersRank': '#48,320 in Kindle Store',
-    'categoryRank': {
-      'Mythology & Folk Tales': '#543',
-      'Myths, Legends & Sagas': '#1,510'
-    },
-    'ASIN': 'B0BPTYBLZ6',
-    'language': 'English',
-    'fileSize': '1355 KB',
-    'textToSpeech': 'Enabled',
-    'screenReader': 'Supported',
-    'enhancedTypesetting': 'Enabled',
-    'xRay': 'Not Enabled',
-    'wordWise': 'Enabled'
   },
   {
-    'title': 'Dharmayoddha Kalki: Avatar of Vishnu',
-    'author': 'Kevin Missal',
-    'image': 'assets/home/kalki.jpg', // Replace with the actual image path
+    'title': 'Deep Work',
+    'author': 'Cal Newport',
+    'image': 'assets/home/deep.jpg', // Replace with the actual image path
     'mainDescription':
-        "Kevin Missal wrote his first book at the age of 14, and at 22, the St Stephens graduate was a bestselling author with the first two books in his Kalki series, which were runaway successes. Kevin loves fantasy fiction and has always been a fan of mythology. His books have been featured in publications like the Sunday Guardian, The New Indian Express, and Millennium Post. He lives in Gurugram and can be contacted at Kevin.s.missal@gmail.com.",
+        "Cal Newport is an Associate Professor of Computer Science at Georgetown University who writes for general audiences about the intersections of culture and technology. He is the author of eight books, including, most recently, Slow Productivity, A World Without Email, Digital Minimalism, and Deep Work. These titles include multiple New York Times bestsellers and have been published in over 40 languages. Newport is also a contributing writer for The New Yorker and the host of the Deep Questions podcast.",
     'rating': 4.5, // Assuming a rating based on popularity
     'genre': 'Fantasy, Mythology',
     'publicationYear': '2024',
     'pageCount': 324,
-    'publisher': 'S&S India (5 November 2024)',
-    'ISBN': 'B0DHV1T91L',
-    'itemWeight': '615 KB',
+    'publisher': 'PIATKUS (1 January 2016)',
+    'ISBN': '0857422405',
+    'itemWeight': '41 g',
     'dimensions':
-        'N/A', // Not provided, but you can add dimensions if available
+        '1.91 x 12.9 x 20.09 cm', // Not provided, but you can add dimensions if available
     'countryOfOrigin': 'India',
-    'bestSellersRank': '#30,165 in Kindle Store',
-    'categoryRank': {
-      'Mythology & Folk Tales': '#326',
-      'Epic Fantasy': '#755',
-      'Myths, Legends & Sagas': '#1,006',
-    },
+    'bestSellersRank':
+        ' #2,160 in Books (See Top 100 in Books) 24 in Literary Theory, History & Criticism',
   }
 ];

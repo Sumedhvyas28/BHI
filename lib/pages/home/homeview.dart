@@ -288,16 +288,17 @@ class _HomePageState extends State<HomePage> {
                                 Expanded(
                                   child: index == 0
                                       ? Image.asset(
-                                          "assets/home/hkashyap.jpg", // Photo for first page
-                                          fit: BoxFit.cover,
+                                          "assets/home/making.jpg", // Photo for first page
+
+                                          fit: BoxFit.fitWidth,
                                         )
                                       : index == 1
                                           ? Image.asset(
-                                              "assets/home/fence.jpg", // Photo for first page
+                                              "assets/home/evie.jpg", // Photo for first page
                                               fit: BoxFit.cover,
                                             )
                                           : Image.asset(
-                                              "assets/home/unlocked.jpg", // Photo for first page
+                                              "assets/home/5 types of we.jpg", // Photo for first page
                                               fit: BoxFit.cover,
                                             ),
                                 ),
@@ -431,11 +432,11 @@ class _HomePageState extends State<HomePage> {
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Image.asset(
-                                  'assets/home/yama.jpg', // Updated image asset
-                                  width:
-                                      screenWidth * 0.3, // Flexible image width
+                                  'assets/home/alech.jpg', // Updated image asset
+                                  width: screenWidth *
+                                      0.31, // Flexible image width
                                   height: screenHeight *
-                                      0.25, // Flexible image height
+                                      0.3, // Flexible image height
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -449,7 +450,7 @@ class _HomePageState extends State<HomePage> {
                                 children: [
                                   // Title with adaptive font size
                                   Text(
-                                    'Yama Kindle Edition',
+                                    'The Alchemist',
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontSize: screenWidth > 600
@@ -461,7 +462,7 @@ class _HomePageState extends State<HomePage> {
                                   SizedBox(height: screenHeight * 0.01),
                                   // Author and format text with adaptive font size
                                   Text(
-                                    'by Kevin Missal (Author)\nFormat: Kindle Edition',
+                                    'Paulo Coelho',
                                     style: TextStyle(
                                       color: Colors.grey,
                                       fontSize: screenWidth > 600 ? 16 : 14,
@@ -471,7 +472,7 @@ class _HomePageState extends State<HomePage> {
                                   SizedBox(height: screenHeight * 0.01),
                                   // Rating text with adaptive font size
                                   Text(
-                                    '4.2 out of 5 stars    206 ratings',
+                                    '4.6 out of 5 stars    45,602 ratings',
                                     style: TextStyle(
                                       color: Colors.grey,
                                       fontSize: screenWidth > 600 ? 16 : 14,
@@ -480,7 +481,7 @@ class _HomePageState extends State<HomePage> {
                                   SizedBox(height: screenHeight * 0.01),
                                   // Description text with ellipsis for overflow
                                   Text(
-                                    'Dhruvi Rajput is a psychotherapist who has...',
+                                    'Paulo Coelhos enchanting novel has inspired a devoted following...',
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(

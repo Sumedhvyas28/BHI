@@ -20,7 +20,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Yama",
+          "The Alchemist",
           style: TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.bold,
@@ -37,7 +37,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
             const SizedBox(height: 20),
             // Title
             const Text(
-              'Yama Kindle Edition',
+              'The Alchemist',
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 28,
@@ -48,7 +48,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
 
             // Book Cover Image
             Image.asset(
-              'assets/home/yama.jpg', // Replace with the correct path to your image
+              'assets/home/alech.jpg', // Replace with the correct path to your image
               width: screenWidth * 0.7, // Adjust the size to fit your design
               height: screenHeight * 0.3, // Adjust the height
               fit: BoxFit.cover, // Ensure the image fits properly
@@ -57,7 +57,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
 
             // Initial Description Text
             const Text(
-              'Yama follows the gripping story of Dhruvi Rajput, a psychotherapist who has lost the two most important people in her life. Her world takes an unexpected turn when she receives a call from a mysterious man identifying himself as Yama, the God of Death.',
+              'Paulo Coelhos enchanting novel has inspired a devoted following around the world. This story, dazzling in its powerful simplicity and inspiring wisdom, is about an Andalusian shepherd boy named Santiago who travels from his homeland in Spain to the Egyptian desert in search of a treasure buried in the Pyramids. Along the way he meets a Gypsy woman, a man who calls himself',
               style: TextStyle(
                 color: Colors.black87,
                 fontSize: 16,
@@ -71,7 +71,10 @@ class _DescriptionPageState extends State<DescriptionPage> {
               firstChild:
                   const SizedBox.shrink(), // Empty widget for collapsed state
               secondChild: const Text(
-                'Basheer Ali, a Senior Inspector at the CBI, investigates the vigilante killer "Yama," who punishes the corrupt and guilty by exposing them on social media before serving fatal justice. As the story unfolds, Dhruvi and Basheer must confront their own moral dilemmas while chasing the shadowy figure of Yama. The story leads to an unexpected final choice that will have readers questioning their own sense of justice.',
+                'Through the journey, Santiago learns the language of omens and follows his "Personal Legend." '
+                'Guided by the wisdom of the Alchemist, he realizes that true treasure lies not just in material wealth, '
+                'but in self-discovery and the pursuit of one’s dreams. The novel blends mysticism, philosophy, and adventure, '
+                'encouraging readers to listen to their hearts and embrace the journey of life.',
                 style: TextStyle(
                   color: Colors.black87,
                   fontSize: 16,
@@ -125,7 +128,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
             ),
             const SizedBox(height: 10),
             const Text(
-              'Kevin Missal is a best-selling author who wrote his first book at the age of 14. His works have garnered a large fanbase, especially his Kalki series, which has been a runaway success. At just 24 years old, Kevin has already established himself as a full-time writer. He is passionate about fantasy fiction and mythology. Kevin lives in Gurugram and can be contacted via email at kevin.s.missal@gmail.com.',
+              'Born in Brazil, Paulo Coelho started his career as a lyricist and theatre director and later left it to become an author. Paulo has written and published over 30 books and is also an avid blogger. He is active on numerous other social media platforms. Paulo Coelho was named the Messenger of Peace of the United Nations in 2007 and has bagged numerous prestigious awards like the Crystal Award by the World Economic Forum, The Honorable Award of the President of the Republic by the President of Bulgaria and so on.',
               style: TextStyle(
                 color: Colors.black87,
                 fontSize: 14,
@@ -145,7 +148,21 @@ class _DescriptionPageState extends State<DescriptionPage> {
             ),
             const SizedBox(height: 10),
             const Text(
-              'ASIN: B08KRMF4GY\nPublisher: S&S India (15 October 2020)\nLanguage: English\nFile size: 829 KB\nText-to-Speech: Enabled\nScreen Reader: Supported\nEnhanced typesetting: Enabled\nX-Ray: Not Enabled\nWord Wise: Enabled\nBest Sellers Rank: #45,517 in Kindle Store\n#286 in Urban Fantasy (Books)\n#508 in Mythology & Folk Tales\n#1,428 in Myths, Legends & Sagas',
+              'ASIN : 8172234988\n'
+              'Publisher:Harper; Later Printing edition (17 October 2005)\n'
+              'Language : English\n'
+              'Paperback  : 172 pages\n'
+              'ISBN-10 : 9788172234980\n'
+              'ISBN-13  :   978-8172234980\n'
+              'Reading age :Customer suggested age: 14 years and up\n'
+              'Item Weight : 125 g\n'
+              'Dimensions  : 12.9 x 1.5 x 19.8 cm\n'
+              'Country of Origin :United Kingdom\n'
+              'Net Quantity:1.00 count\n'
+              'Generic Name  : The Alchemist 12.9 x 1.5 x 19.8 cm\n'
+              'Best Sellers Rank: #53 in Books (See Top 100 in Books)\n'
+              '#8 in Contemporary Fiction (Books)\n'
+              'Customer Reviews: 4.6 4.6 out of 5 stars    45,602 ratings',
               style: TextStyle(
                 color: Colors.black54,
                 fontSize: 14,
